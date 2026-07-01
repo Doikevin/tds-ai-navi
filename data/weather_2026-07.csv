@@ -1,3 +1,4 @@
 fetched_at,temperature,apparent_temperature,precipitation,rain,weather_code,cloud_cover,wind_speed,humidity
 2026-07-01T19:49:21+09:00,23.2,26.6,0.0,0.0,3,90,9.4,92
 2026-07-01T20:07:23+09:00,23.1,26.4,0.0,0.0,3,86,10.1,92
+2026-07-01T22:40:22+09:00,22.9,26.5,0.0,0.0,3,92,8.3,93
