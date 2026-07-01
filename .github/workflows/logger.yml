@@ -1,0 +1,45 @@
+name: Wait Time Logger
+
+# GitHub のクラウド上で待ち時間ロガーを自動実行し、結果を data/ にコミットします。
+on:
+  schedule:
+    # cron は UTC 表記。'*/15 0-13' = 日本時間 9:00〜22:59 に 15分ごと（パーク営業時間帯）。
+    # ※GitHub の都合で実行が数分〜十数分ずれることがあります（仕様）。
+    - cron: '*/15 0-13 * * *'
+  workflow_dispatch:  # 手動実行ボタン（テスト用）
+
+# data/ に書き込んで push するための権限
+permissions:
+  contents: write
+
+# 実行の重複を防ぐ（前の回が終わるまで次を待つ）
+concurrency:
+  group: wait-time-logger
+  cancel-in-progress: false
+
+jobs:
+  log:
+    runs-on: ubuntu-latest
+    steps:
+      - name: リポジトリを取得
+        uses: actions/checkout@v4
+
+      - name: Python を準備
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 依存ライブラリを導入
+        run: pip install -r requirements.txt
+
+      - name: ロガーを実行
+        run: python logger.py
+
+      - name: データをコミットして保存
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git commit -m "data: $(date -u +'%Y-%m-%dT%H:%MZ')" || echo "変更なし"
+          git pull --rebase --autostash origin ${{ github.ref_name }}
+          git push

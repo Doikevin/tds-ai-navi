@@ -1,0 +1,8 @@
+# ローカルのSQLite（初期テスト用、GitHubには上げない）
+data.sqlite
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
